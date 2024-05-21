@@ -13,15 +13,14 @@ const inputFolderPath = path.dirname(imageFilePath) + path.sep;
 const inputFileName = path.basename(imageFilePath);
 const { name } = path.parse(inputFileName); // filename without extension
 
-/* const source = tinify.fromFile("unoptimized.webp");
-source.toFile("optimized.webp"); */
-
 console.log('inputFolderPath : ' + inputFolderPath)
 console.log('imageFilePath : ' + imageFilePath)
 console.log('path sep : ' + path.sep)
 
 prompt.start();
-async function getUserInput() {
+async function convertThumbnail() {
+
+  //Ask user input about the output image target width
   const result = await new Promise(resolve => {
     prompt.get({
       name: 'targetWidth',
@@ -30,9 +29,10 @@ async function getUserInput() {
       resolve(result);
     });
   });
-
   targetWidth = Number(result.targetWidth)
+  
 
+  //Image conversion
   Jimp.read(imageFilePath)
   .then((image) => {
     // Resize the image
@@ -54,15 +54,7 @@ async function getUserInput() {
     console.error('An error occurred:', error);
   });
 }
-getUserInput()
-/* prompt.get({
-  name: 'targetWidth',
-  message: 'What is your targetWidth?'
-}, (err, result) => {
-  targetWidth = result.targetWidth
-}); */
-
-//process.exit(0);
+convertThumbnail()
 
 
 
