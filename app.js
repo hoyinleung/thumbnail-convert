@@ -2,15 +2,14 @@ const webp=require('webp-converter');
 const fs = require('fs');
 const path = require('path');
 const tinify = require("tinify");
-tinify.key = process.env.TINIFY_KEY;
+tinify.key = process.env.TINIFY;
 console.log(`今月已使用${tinify.compressionCount}次壓縮`);
 
 const imageFilePath = process.argv[3];
 const inputFolderPath = path.dirname(imageFilePath)+ path.sep;
 const inputFileName = path.basename(imageFilePath);
-console.log("🚀 ~ inputFileName:", inputFileName)
+const { name } = path.parse(inputFileName); // filename without extension
 const targetWidth = 600
-//console.log(process.argv)
 
 /* const source = tinify.fromFile("unoptimized.webp");
 source.toFile("optimized.webp"); */
@@ -28,13 +27,13 @@ Jimp.read(imageFilePath)
     image.resize(targetWidth, Jimp.AUTO); // Provide the desired width and maintain aspect ratio
     console.log(`${inputFolderPath}${inputFileName}-${targetWidth}w.png`)
     // Save the resized image
-    return image.writeAsync(`${inputFolderPath}${inputFileName}-${targetWidth}w.png`);
+    return image.writeAsync(`${inputFolderPath}${name}-${targetWidth}w.png`);
   })
   .then(() => {
     console.log('Image resized successfully.');
 
     // Convert the resized image to WebP format
-    return webp.cwebp(`${inputFolderPath}${inputFileName}-${targetWidth}w.png`, `${inputFolderPath}${inputFileName}-${targetWidth}w.webp`, '-q 90');
+    return webp.cwebp(`${inputFolderPath}${name}-${targetWidth}w.png`, `${inputFolderPath}${name}-${targetWidth}w.webp`, '-q 90');
     //return webp.cwebp(inputFolderPath+'output.png', inputFolderPath+'output.webp', '-q 90');
   })
   .then(() => {
